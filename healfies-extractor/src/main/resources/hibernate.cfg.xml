@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+
+
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://healfies-extractor-pg.cp8rjc673vus.us-east-1.rds.amazonaws.com:5432/healfies</property>
+        <property name="hibernate.connection.username">healfies_user</property>
+        <property name="hibernate.connection.password">healfies</property>
+        <property name="hibernate.connection.initial_pool_size">1</property>
+        <property name="hibernate.connection.pool_size">5</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+        
+        <property name="hibernate.transaction.manager_lookup_class">org.hibernate.transaction.JBossTransactionManagerLookup</property>
+        <property name="hibernate.jdbc.use_get_generated_keys">true</property>
+        <property name="hibernate.temp.use_jdbc_metadata_defaults">false</property>
+    </session-factory>
+</hibernate-configuration>
