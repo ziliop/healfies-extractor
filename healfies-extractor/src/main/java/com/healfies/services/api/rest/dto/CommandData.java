@@ -1,6 +1,13 @@
 package com.healfies.services.api.rest.dto;
 
-public class CommandData {
+import java.io.Serializable;
+
+public class CommandData implements Serializable {
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4358298235221172159L;
 	
 	private String configFileContents;
 	private String sqlCommand;

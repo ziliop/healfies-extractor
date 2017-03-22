@@ -1,7 +1,13 @@
 package com.healfies.services.client;
 
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
+
+import javax.imageio.stream.FileCacheImageInputStream;
 
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
@@ -32,25 +38,30 @@ public class ListenerJob implements Job {
 		CommandData commandData = getCommand();
 		
 		Configuration config = new Configuration();
-		SessionFactory factory = config.configure(commandData.getConfigFileContents()).buildSessionFactory();
 		
-		//Persistence.createEntityManagerFactory("healfies-ds");
-		
-		Session session = factory.openSession();
-		SQLQuery q = session.createSQLQuery(commandData.getSqlCommand());
-		
-		List<Object[]> o = q.list();
-		
-		for (Object[] row: o){
-			for(Object col: row){
-				System.out.print(col + " - ");
+		ByteArrayInputStream bais = new ByteArrayInputStream(commandData.getConfigFileContents().getBytes());
+	
+
+			SessionFactory factory = config.addInputStream(bais).configure().buildSessionFactory();
+			
+			//Persistence.createEntityManagerFactory("healfies-ds");
+			
+			Session session = factory.openSession();
+			SQLQuery q = session.createSQLQuery(commandData.getSqlCommand());
+			
+			List<Object[]> o = q.list();
+			
+			for (Object[] row: o){
+				for(Object col: row){
+					System.out.print(col + " - ");
+				}
+				System.out.println();
 			}
-			System.out.println();
-		}
-		
-		session.close();
-		
-		System.out.println("terminando execução do serviço");
+			
+			session.close();
+			
+			System.out.println("terminando execução do serviço");
+	
 		
 	}
 

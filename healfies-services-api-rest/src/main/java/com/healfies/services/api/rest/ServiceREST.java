@@ -44,7 +44,7 @@ public class ServiceREST {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public CommandData getExecutionCommand(@QueryParam("clientID") String clientID){
+	public Response getExecutionCommand(@QueryParam("clientID") String clientID){
 		CommandData cd = new CommandData();
 		try {
 			InputStream bais = this.getClass().getResourceAsStream("/hibernate.cfg.xml");
@@ -64,7 +64,7 @@ public class ServiceREST {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return cd;
+		return Response.ok(cd, MediaType.APPLICATION_JSON).build();
 	}
 	
 	@POST
