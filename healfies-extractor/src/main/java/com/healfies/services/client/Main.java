@@ -10,8 +10,6 @@ import org.quartz.SimpleScheduleBuilder;
 import org.quartz.Trigger;
 import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
-import org.restlet.Component;
-
 
 public class Main {
 	
@@ -24,15 +22,12 @@ public class Main {
 		// check configuration file and make sure it's correct
         loadConfigurationFile();
 
-        // and finally create and start the server
-        Component component = new Component();
-
         // everything is ready, start the server
-        verificarEIniciar(component);
+        verificarEIniciar();
 
 	}
 
-	private static void verificarEIniciar(Component component) {
+	private static void verificarEIniciar() {
 		
 
 	        //logger.trace("Starting the Openstack event collector micro service");

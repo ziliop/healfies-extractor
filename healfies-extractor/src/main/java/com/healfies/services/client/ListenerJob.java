@@ -10,6 +10,14 @@ import org.hibernate.cfg.Configuration;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.ClientHttpRequestFactory;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.web.client.RestTemplate;
+
+import com.healfies.services.api.rest.dto.CommandData;
 
 public class ListenerJob implements Job {
 
@@ -18,14 +26,18 @@ public class ListenerJob implements Job {
 		
 		System.out.println("iniciando execução do serviço");
 		
+		
+		String token = getToken();
+		
+		CommandData commandData = getCommand();
+		
 		Configuration config = new Configuration();
-		URL url = config.getClass().getResource("/hibernate.cfg.xml");
-		SessionFactory factory = config.configure(url).buildSessionFactory();
+		SessionFactory factory = config.configure(commandData.getConfigFileContents()).buildSessionFactory();
 		
 		//Persistence.createEntityManagerFactory("healfies-ds");
 		
 		Session session = factory.openSession();
-		SQLQuery q = session.createSQLQuery("SELECT * FROM test");
+		SQLQuery q = session.createSQLQuery(commandData.getSqlCommand());
 		
 		List<Object[]> o = q.list();
 		
@@ -40,6 +52,27 @@ public class ListenerJob implements Job {
 		
 		System.out.println("terminando execução do serviço");
 		
+	}
+
+	private String getToken() {
+		
+		RestTemplate rest = new RestTemplate();
+		
+		//rest.postForEntity("localhost:8080/", request, responseType)
+		
+		return null;
+	}
+	
+	private CommandData getCommand(){
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<CommandData> response = rest.getForEntity("http://localhost:8080/healfies-services-api-rest/api/services/command", CommandData.class);
+		
+		return response.getBody();
 	}
 
 }
