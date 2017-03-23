@@ -1,16 +1,13 @@
 package com.healfies.services.api.rest.dto;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonRootName;
 
-public class CommandData implements Serializable {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 4358298235221172159L;
+@JsonRootName("commanddata")
+public class CommandData {
 	
 	private String configFileContents;
 	private String sqlCommand;
+	
 	public String getConfigFileContents() {
 		return configFileContents;
 	}

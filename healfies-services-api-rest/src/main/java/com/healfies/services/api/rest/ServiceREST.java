@@ -1,7 +1,7 @@
 package com.healfies.services.api.rest;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,7 +44,7 @@ public class ServiceREST {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response getExecutionCommand(@QueryParam("clientID") String clientID){
+	public CommandData getExecutionCommand(@QueryParam("clientID") String clientID){
 		CommandData cd = new CommandData();
 		try {
 			InputStream bais = this.getClass().getResourceAsStream("/hibernate.cfg.xml");
@@ -64,7 +64,7 @@ public class ServiceREST {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return Response.ok(cd, MediaType.APPLICATION_JSON).build();
+		return cd;
 	}
 	
 	@POST

@@ -49,7 +49,7 @@ public class Main {
 	            scheduler.start();
 	            
 	        } catch (Exception e) {
-	            String log = String.format("Couldn't start the server: %s", e.getMessage());
+	            String log = String.format("Não foi possível iniciar o serviço: %s", e.getMessage());
 	            //logger.error(log);
 	            System.err.println(log);
 	            System.exit(ERR_START);
