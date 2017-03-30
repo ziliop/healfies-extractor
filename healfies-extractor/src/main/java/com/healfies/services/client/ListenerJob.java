@@ -28,95 +28,94 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.healfies.services.api.rest.dto.CommandData;
-import com.sun.xml.internal.bind.v2.runtime.JAXBContextImpl;
+import com.sun.xml.bind.v2.runtime.JAXBContextImpl;
 
 public class ListenerJob implements Job {
 
+    public void execute(JobExecutionContext context) throws JobExecutionException {
 
-	public void execute(JobExecutionContext context) throws JobExecutionException {
-		
-		System.out.println("iniciando execução do serviço");
-		
-		
-		String token = getToken();
-		
-		CommandData commandData = getCommand();
-		
-		Configuration config = new Configuration();
-		
-		String xmlStr =  commandData.getConfigFileContents();
-		
-		try {
-			JAXBContext jaxb = JAXBContextImpl.newInstance(JaxbCfgHibernateConfiguration.class);
-			
-			JaxbCfgHibernateConfiguration jaxbCfg = (JaxbCfgHibernateConfiguration) jaxb.createUnmarshaller().unmarshal(new StreamSource( new StringReader( xmlStr.toString())));
-			
-			StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
-					
-			LoadedConfig loadedConfig = LoadedConfig.consume(jaxbCfg );
-			StandardServiceRegistry svc = builder.configure(loadedConfig).build();
-			SessionFactory factory = config.buildSessionFactory(svc);
-				
-				//Persistence.createEntityManagerFactory("healfies-ds");
-				
-				Session session = factory.openSession();
-				SQLQuery q = session.createSQLQuery(commandData.getSqlCommand());
-				
-				List<Object[]> o = q.list();
-				
-				for (Object[] row: o){
-					for(Object col: row){
-						System.out.print(col + " - ");
-					}
-					System.out.println();
-				}
-				
-				session.close();
-				
-				System.out.println("terminando execução do serviço");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-		
-	}
+        System.out.println("iniciando execuÃ§Ã£oo do serviÃ§o");
 
-	private String getToken() {
-		
-		RestTemplate rest = new RestTemplate();
-		
-		//rest.postForEntity("localhost:8080/", request, responseType)
-		
-		return null;
-	}
-	
-	private CommandData getCommand(){
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		HttpEntity<String> entity = new HttpEntity<String>("", headers);
-		
-		RestTemplate rest = new RestTemplate();
+        String token = getToken();
 
-		ResponseEntity<String> response = rest.getForEntity("http://localhost:8080/healfies-services-api-rest/api/services/command", String.class);
-		
-		ObjectMapper om = new ObjectMapper();
-		try {
-			return om.readValue(response.getBody().getBytes(), CommandData.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return new CommandData();
-	}
+        CommandData commandData = getCommand();
+
+        Configuration config = new Configuration();
+
+        String xmlStr = commandData.getConfigFileContents();
+
+        try {
+            JAXBContext jaxb = JAXBContextImpl.newInstance(JaxbCfgHibernateConfiguration.class);
+
+            JaxbCfgHibernateConfiguration jaxbCfg = (JaxbCfgHibernateConfiguration) jaxb.createUnmarshaller()
+                .unmarshal(new StreamSource(new StringReader(xmlStr.toString())));
+
+            StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder();
+
+            LoadedConfig loadedConfig = LoadedConfig.consume(jaxbCfg);
+            StandardServiceRegistry svc = builder.configure(loadedConfig).build();
+            SessionFactory factory = config.buildSessionFactory(svc);
+
+            // Persistence.createEntityManagerFactory("healfies-ds");
+
+            Session session = factory.openSession();
+            SQLQuery q = session.createSQLQuery(commandData.getSqlCommand());
+
+            List<Object[]> o = q.list();
+
+            for (Object[] row : o) {
+                for (Object col : row) {
+                    System.out.print(col + " - ");
+                }
+                System.out.println();
+            }
+
+            session.close();
+
+            System.out.println("terminando execuÃ§Ã£o do serviÃ§o");
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+    }
+
+    private String getToken() {
+
+        RestTemplate rest = new RestTemplate();
+
+        // rest.postForEntity("localhost:8080/", request, responseType)
+
+        return null;
+    }
+
+    private CommandData getCommand() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        HttpEntity<String> entity = new HttpEntity<String>("", headers);
+
+        RestTemplate rest = new RestTemplate();
+
+        ResponseEntity<String> response = rest.getForEntity(
+            "http://localhost:8080/healfies-services-api-rest/api/services/command", String.class);
+
+        ObjectMapper om = new ObjectMapper();
+        try {
+            return om.readValue(response.getBody().getBytes(), CommandData.class);
+        } catch (JsonParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return new CommandData();
+    }
 
 }
