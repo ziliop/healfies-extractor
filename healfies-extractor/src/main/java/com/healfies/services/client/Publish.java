@@ -2,11 +2,10 @@ package com.healfies.services.client;
 
 import java.io.IOException;
 
-import org.joda.time.Duration;
-
 import com.google.api.gax.core.ApiFuture;
-import com.google.api.gax.core.RetrySettings;
-import com.google.api.gax.core.RetrySettings.Builder;
+import com.google.api.gax.core.FixedCredentialsProvider;
+import com.google.api.gax.grpc.InstantiatingChannelProvider;
+import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.pubsub.spi.v1.Publisher;
 import com.google.cloud.pubsub.spi.v1.TopicAdminClient;
 import com.google.cloud.pubsub.spi.v1.TopicAdminSettings;
@@ -21,21 +20,17 @@ public class Publish {
 
         try {
 
-            // ServiceAccountCredentials credentials =
-            // ServiceAccountCredentials.fromStream(this.getClass().getResourceAsStream("/api-key.json"));
+            ServiceAccountCredentials credentials =
+                ServiceAccountCredentials.fromStream(this.getClass().getResourceAsStream("/api-key.json"));
+
+            InstantiatingChannelProvider channelProvider = TopicAdminSettings.defaultChannelProviderBuilder()
+                .setCredentialsProvider(FixedCredentialsProvider.create(credentials)).build();
+            TopicAdminSettings topicAdminSettings =
+                TopicAdminSettings.defaultBuilder().setChannelProvider(channelProvider).build();
 
             TopicName topic = TopicName.create("api-project-299549388106", "test-topic");
 
-            TopicAdminSettings settings = TopicAdminSettings.newBuilder().build();
-            Builder retrySettingsBuilder = RetrySettings.newBuilder().setTotalTimeout(Duration.millis(10000))
-                .setInitialRetryDelay(Duration.millis(10000)).setRetryDelayMultiplier(1d)
-                .setMaxRetryDelay(Duration.millis(10000)).setInitialRpcTimeout(Duration.millis(10000))
-                .setRpcTimeoutMultiplier(1d).setMaxRpcTimeout(Duration.millis(10000));
-
-            settings.setIamPolicySettings().toBuilder().setRetrySettingsBuilder(retrySettingsBuilder).build();
-
-            // defaultCredentialsProviderBuilder().setScopesToApply(scopes).build().;
-            TopicAdminClient topicAdminClient = TopicAdminClient.create(settings);
+            TopicAdminClient topicAdminClient = TopicAdminClient.create(topicAdminSettings);
             Topic t = topicAdminClient.getTopic(topic);
             if (t != null) {
                 return t.getNameAsTopicName();
