@@ -1,7 +1,6 @@
 package com.healfies.services.client;
 
 import java.io.IOException;
-import java.util.Properties;
 
 import org.quartz.JobBuilder;
 import org.quartz.JobDetail;
@@ -12,12 +11,13 @@ import org.quartz.TriggerBuilder;
 import org.quartz.impl.StdSchedulerFactory;
 
 import com.google.pubsub.v1.TopicName;
+import com.healfies.services.configuration.HealfiesExtractorProperties;
 
 public class Main {
 
     private static final int ERR_START = 7;
 
-    private static Properties prop = new Properties();
+    private static HealfiesExtractorProperties prop;
 
     public static void main(String[] args) throws IOException {
 
@@ -46,7 +46,7 @@ public class Main {
         try {
 
             // also start collection immediately
-            Integer time = Integer.valueOf(prop.getProperty("com.healfies.extractor.scheduler"));
+            Integer time = Integer.valueOf(prop.getSchedulerTime());
 
             Scheduler scheduler = StdSchedulerFactory.getDefaultScheduler();
 
@@ -71,7 +71,7 @@ public class Main {
 
     private static void loadConfigurationFile() throws IOException {
 
-        prop.load(prop.getClass().getResourceAsStream("/healfies-extractor.properties"));
+        prop = HealfiesExtractorProperties.getInstance();
 
     }
 

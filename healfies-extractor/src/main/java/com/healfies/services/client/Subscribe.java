@@ -13,11 +13,14 @@ import com.google.pubsub.v1.PushConfig;
 import com.google.pubsub.v1.Subscription;
 import com.google.pubsub.v1.SubscriptionName;
 import com.google.pubsub.v1.TopicName;
+import com.healfies.services.configuration.HealfiesExtractorProperties;
 
 public class Subscribe {
 
+    private HealfiesExtractorProperties prop = HealfiesExtractorProperties.getInstance();
+
     private SubscriptionName createOrRetrieveSubscription(TopicName topic, String subscriberID) {
-        SubscriptionName subscription = SubscriptionName.create("api-project-299549388106", subscriberID);
+        SubscriptionName subscription = SubscriptionName.create(prop.getProjectID(), subscriberID);
 
         try {
 
@@ -34,10 +37,8 @@ public class Subscribe {
                 return subscription;
             }
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (Exception e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         return null;
